@@ -1,0 +1,23 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 90vh;
+}
+
+.App .Row {
+  display: border-box;
+  margin: 5px;
+  padding: 5px;
+  height: 100%;
+  width: 20%;
+  border: 1px solid black;
+}
+
+.App .Row .RowHeader {
+  font-weight: bold;
+  font-size: 1.5em;
+  padding-bottom: 5px;
+  border-bottom: 2px solid black;
+}
