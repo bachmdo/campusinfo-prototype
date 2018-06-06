@@ -1,23 +1,24 @@
 .App {
-  text-align: center;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  height: 90vh;
-}
-
-.App .Row {
-  display: border-box;
-  margin: 5px;
+  align-items: stretch;
+  justify-content: center;
   padding: 5px;
-  height: 100%;
-  width: 20%;
-  border: 1px solid black;
+  max-width: 100%;
 }
 
-.App .Row .RowHeader {
-  font-weight: bold;
-  font-size: 1.5em;
-  padding-bottom: 5px;
-  border-bottom: 2px solid black;
+.Day {
+  width: 20%;
+}
+
+.Slot {
+  height: 10%;
+  background-color: whitesmoke;
+  display: border-box;
+  border: 1px solid white;
+}
+
+.full {
+  background-color: turquoise;
 }
