@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
-import moment from 'moment';
+import { format, getISODay, startOfWeek } from 'date-fns';
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { days: [{ slots: [] }] };
+    this.state = {
+      days: [{ slots: [] }],
+      displayDate: format(
+        startOfWeek(new Date(), { weekStartsOn: 1 }),
+        'YYYY-MM-DD'
+      ),
+      userName: 'bachmdo2'
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.updateTimetable = this.updateTimetable.bind(this);
   }
 
-  async componentDidMount() {
-    const stream = await fetch('http://localhost:4000/username', {
-      method: 'POST',
-      body: JSON.stringify({ username: 'bachmdo2' })
-    });
-    const response = await stream.json();
-    response.days && this.setState({ days: response.days });
+  componentDidMount() {
+    this.updateTimetable();
   }
 
   componentDidUpdate() {
+    //TODO do this with React instead of getElementById
     this.state.days.forEach((day) => {
       day.events.forEach((event) => {
         let target = document.getElementById(`${event.startTime}`);
@@ -31,29 +36,58 @@ class App extends Component {
     });
   }
 
+  handleChange(e) {
+    this.setState({ userName: e.target.value });
+  }
+
+  async updateTimetable() {
+    const stream = await fetch('http://localhost:4000/username', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userName: this.state.userName,
+        startDate: this.state.displayDate
+      })
+    });
+    const response = await stream.json();
+    response.days && this.setState({ days: response.days });
+  }
+
   render() {
     return (
       <div className="App">
         <div className="Top">
           <BackButton />
           <ForwardButton />
+          <input
+            type="text"
+            name="userName"
+            onChange={this.handleChange}
+            defaultValue={this.state.userName}
+          />
+          <input type="button" onClick={this.updateTimetable} value="Update" />
         </div>
         <div className="Table">
           <div className="Day">
             <div className="Slot">
-              ZHAW<br />Timetable
+              ZHAW
+              <br />
+              Timetable
             </div>
             {this.state.days[0].slots.map((slot, index) => {
-              const m = moment(slot.startTime).format('HH:mm');
+              const date = format(new Date(slot.startTime), 'HH:mm');
               return (
                 <div className="Slot" key={'time'.concat(slot.startTime)}>
-                  {m}
+                  {date}
                 </div>
               );
             })}
           </div>
           {this.state.days.map((day) => {
-            if (moment(day.date).isoWeekday() !== 7) {
+            if (getISODay(new Date(day.date)) !== 7) {
               return <Day key={'day'.concat(day.date)} day={day} />;
             } else return null;
           })}
@@ -64,13 +98,13 @@ class App extends Component {
 }
 
 const Day = (props) => {
-  const m = moment(props.day.date);
+  const date = new Date(props.day.date);
   return (
     <div className="Day">
       <div className="Slot">
-        {m.format('dd')}
+        {format(date, 'dd')}
         <br />
-        {m.format('DD.MM')}
+        {format(date, 'DD.MM')}
       </div>
       {props.day.slots.map((slot, index) => {
         return <Slot key={'slot'.concat(slot.startTime)} slot={slot} />;
