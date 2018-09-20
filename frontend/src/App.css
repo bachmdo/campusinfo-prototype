@@ -1,4 +1,9 @@
 .App {
+  height: 100vh;
+  background-color: white;
+}
+
+.Table {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -19,6 +24,6 @@
   border: 1px solid white;
 }
 
-.full {
+.Event {
   background-color: turquoise;
 }
