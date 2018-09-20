@@ -1,11 +1,11 @@
 language: node_js
 node_js:
   - "stable"
-before_install:
-  - cd frontend
+env:
+  - TEST_DIR=frontend
+  - TEST_DIR=backend
 cache:
   directories:
   - node_modules
 script:
-  - npm test
-  - npm run build
+  - cd $TEST_DIR && npm install && npm run test
